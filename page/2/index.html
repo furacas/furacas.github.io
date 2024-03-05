@@ -1,0 +1,405 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>北梦的个人博客</title><meta name="author" content="北梦"><meta name="copyright" content="北梦"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="技术博客,学习笔记"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.furacas.com/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '北梦的个人博客',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-03-05 17:19:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="北梦的个人博客" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">43</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background: linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)"><nav id="nav"><span id="blog-info"><a href="/" title="北梦的个人博客"><span class="site-name">北梦的个人博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">北梦的个人博客</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/furacas" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:s.furacas@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa-solid fa-rss"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left"><a href="/2022/pg89hgy7pr4o41wn/" title="pdfbox实现pdf合并"><img class="post-bg" src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pdfbox实现pdf合并"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/pg89hgy7pr4o41wn/" title="pdfbox实现pdf合并">pdfbox实现pdf合并</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-28T23:03:28.000Z" title="发表于 2022-11-29 07:03:28">2022-11-29</time></span></div><div class="content">目前 Java 的 pdf 文档合并方案常见的有 spire.doc.free、itextpdf、pdfbox 三种。spire.doc.free 的免费版本有页数限制，这里就不考虑了。而性能最好的 itext 的开源协议是AGPL，为了避免以后可能出现的麻烦我放弃了他，选择了可以商用比较友好的 pdfbox。
+pdfboxApache pdfbox 是一个开源 Java 库，可用于创建，渲染，打印，拆分，合并，更改，验证和提取 pdf 文件的文本和元数据。
+maven 依赖12345&lt;dependency&gt;  &lt;groupId&gt;org.apache.pdfbox&lt;/groupId&gt;  &lt;artifactId&gt;pdfbox&lt;/artifactId&gt;  &lt;version&gt;2.0.24&lt;/version&gt;&lt;/dependency&gt;
+
+pdf 合并12345678910public void mergePdf(String... path) throws IOException &#123;    ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/fiuy92xf21391fgf/" title="Java字符串split、replaceAll忽略全半角和大小写"><img class="post-bg" src="/img/cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java字符串split、replaceAll忽略全半角和大小写"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/fiuy92xf21391fgf/" title="Java字符串split、replaceAll忽略全半角和大小写">Java字符串split、replaceAll忽略全半角和大小写</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-24T21:07:31.000Z" title="发表于 2022-11-25 05:07:31">2022-11-25</time></span></div><div class="content">replaceAll忽略大小写很简，使用正则就可以实现
+1String s = &quot;Hello word&quot;.replaceAll(&quot;(?i)hello&quot;,&quot;你好&quot;);
+
+忽略全角半角就需要自己实现了，实现思路是把原字符串、要匹配的字符串全部转换成半角（全角），然后对转换后的字符串做 indexOf，得到 index 之后替换原字符串。
+1234567891011public static String replaceAllIgnoreHalfFull(String source, String toReplace, String replacement) &#123;    StringBuilder sbSource = new StringBuilder(source);    StringBuilder sbSourceHalf = new StringBuilder(StringUtils.fullToHalf(source));    String searchString = StringUtils.fullToHa ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/wz2mz59xvzm6f9b5/" title="Java word转pdf方案"><img class="post-bg" src="/img/cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java word转pdf方案"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/wz2mz59xvzm6f9b5/" title="Java word转pdf方案">Java word转pdf方案</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-23T00:17:48.000Z" title="发表于 2022-11-23 08:17:48">2022-11-23</time></span></div><div class="content">方案调研xdocreporthttps://github.com/opensagres/xdocreport我测试的最新版本(2.0.3 )使用图片会报错，默认不是识别汉子（大概因为字体原因？），不支持批注。网上了解到的可能 word 格式要求较大。
+Asposehttps://www.aspose.com/应该是最完美的方案，但是收费，不便宜
+WPS 云服务定价未知，文档上没有明确出来。需要注册认证成为服务商需要服务暴露到公网上，因为 wps 会回掉服务。格式没有测试，应该会和 office 有细微的差距。
+阿里云服务接口八分钱一次，必须使用阿里云 oss。网上资料很少，个人感觉效果不错，口碑未知。应该是最佳方案。
+Libreoffice需要安装 Libreoffice可以使用程序去调用他自带的 soffice 工具来转或者通过 UNO 的方式排版会有差异，而且也涉及到字体问题，涉及到字体版权问题。
+Jacob仅支持 windows，大致原理就是调用 Microsoft Office &#x2F; WPS 来实现转换，当然需要安装对应的软件，因为我们生产系统肯定部署在 linux 上 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/ggzyo25qm594eqcr/" title="Excel设置最小行高"><img class="post-bg" src="/img/cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Excel设置最小行高"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/ggzyo25qm594eqcr/" title="Excel设置最小行高">Excel设置最小行高</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-22T00:56:00.000Z" title="发表于 2022-11-22 08:56:00">2022-11-22</time></span></div><div class="content">问题有个需求，导出导出的 Excel 需要设置最小高度，比如最小高度是 56px，当内容的高度低于 56 的时候，行高设置为 56，当内容高度大于 56 的时候，根据内容高度自适应。
+因为 excel 的行高只能设置固定大小，或者设置自适应，而没办法设置上述最小行高，所以普通的办法是做不到这个需求的。
+解决可以通过设置字体大小来解决这个最小行高问题。也不知道这是 excel 的 feat 还是 bug。
+
+设置单元格格式——对齐——自动换行——确定
+
+选中一列不使用的列(空白列)，把字体设置一下，这样就有了一个最小行高，比如如果字体大小是 18，那么最小行高就是 22.5。
+
+
+这样可以解决问题，但是相当于废了一个 cell，不过可以接受。
+如果换成代码实现的话，可以用 poi 去按照上述步骤设置，当然也可以自己提前编辑好一个模版文件，然后使用 poi 直接 copy 模版文件的格式。
+</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/cddgaa/" title="解决poi插入的换行符无法被复制的问题"><img class="post-bg" src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="解决poi插入的换行符无法被复制的问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/cddgaa/" title="解决poi插入的换行符无法被复制的问题">解决poi插入的换行符无法被复制的问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-04T02:03:34.000Z" title="发表于 2022-11-04 10:03:34">2022-11-04</time></span></div><div class="content">问题背景在 word 中有两种换行，一种是直接按下回车的”段落换行”而另一种换行符是按下 shift + 回车打出来的换行符 
+12345## 第一种换行符org.apache.poi.xwpf.usermodel.XWPFRun#addCarriageReturn()## 第二种换行符org.apache.poi.xwpf.usermodel.XWPFRun#addBreak()
+
+第一种换行符比较符合我们日常的使用习惯，但是使用上述 api 打出来的换行符可以在 word 中被正常识别，但是无法通过复制的方式把这个换行符复制到一段文本中。举个例子，如下 word 内容
+123第一行第二行第三行
+
+复制到文本文件中变成
+1第一行 第二行 第三行
+
+而我们直接在 word 中敲出来的回车换行符可以被正确复制。
+解决思路因为直接使用 poi 的 api 无法解决这个问题，所以只能另辟蹊径。最后参考https://stackoverflow.com/questions/14830667/insert-a-line-break-inside-a-paragraph-in-xwpfdocume ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/avuapr/" title="Ubuntu20.04修改静态ip"><img class="post-bg" src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu20.04修改静态ip"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/avuapr/" title="Ubuntu20.04修改静态ip">Ubuntu20.04修改静态ip</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-10-02T05:46:24.000Z" title="发表于 2022-10-02 13:46:24">2022-10-02</time></span></div><div class="content">给自己瞎折腾的服务器配置一个固定的静态 ip，虽然这玩意对内网穿透没啥用，但是总不能在内网中也从外网走一圈吧，在内网中直接用 ip 访问就好了。
+1sudo vi /etc/netplan/00-installer-config.yaml
+
+修改文件内容为
+12345678910network:  ethernets:    ens160:      addresses: [192.168.50.8/24] #要修改的ip地址      dhcp4: no #no为静态 yes为自动获取      optional: true      gateway4: 192.168.50.4 #网关地址      nameservers:        addresses: [192.168.50.4] #dns服务器，多个之间逗号分隔  version: 2
+
+静态 ip 下一定要配置 dns 服务器，否则无法访问外网
+使设置生效
+1sudo netplan apply</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/no7oni/" title="Nginx反向代理https忽略证书错误"><img class="post-bg" src="/img/cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx反向代理https忽略证书错误"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/no7oni/" title="Nginx反向代理https忽略证书错误">Nginx反向代理https忽略证书错误</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-10-01T14:32:24.000Z" title="发表于 2022-10-01 22:32:24">2022-10-01</time></span></div><div class="content">因为有需求吧 esxi 暴露到公网上，内网穿透之后，然后反向代理到对应的域名上。这个时候一直 502 错误。因为 esxi 那边暴露的是 443 端口，而证书刚好无效。
+1234567891011121314151617181920212223server &#123;  server_name esxi.$&#123;DOMAIN_NAME&#125;;    listen 80;  location ^~ / &#123;    proxy_pass  https://host.docker.internal:7002;    proxy_set_header Host $proxy_host;    proxy_set_header  X-Real-IP  $remote_addr;    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;    proxy_set_header X-NginX-Proxy true;    proxy_http_version 1.1;    proxy_set_heade ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/ib4gf3/" title="Ubuntu安装frp"><img class="post-bg" src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu安装frp"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/ib4gf3/" title="Ubuntu安装frp">Ubuntu安装frp</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-09-30T03:40:35.000Z" title="发表于 2022-09-30 11:40:35">2022-09-30</time></span></div><div class="content">下载 frp1wget https://github.com/fatedier/frp/releases/download/v0.44.0/frp_0.44.0_linux_amd64.tar.gz
+
+安装123# 解压tar -vxzf frp_0.44.0_linux_amd64.tar.gzmv frp_0.44.0_linux_amd64 frp
+
+设置开启启动12# 创建并编辑 service文件vim /lib/systemd/system/frps.service
+
+文件内容
+1234567891011[Unit]Description=frps daemon[Service]Type=simple# 这里换成你的frp目录ExecStart=/root/app/frp/frps -c /root/app/frp/frps.ini[Install]WantedBy=multi-user.target
+
+这里是我主要用作服务端，因此我只设置了服务端的开机自启动，可以根据需求自行设置
+1234# 启动frpsystemctl start frps# 设置frp自启动syste ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/sgemn2/" title="N5105安装ESXi"><img class="post-bg" src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="N5105安装ESXi"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/sgemn2/" title="N5105安装ESXi">N5105安装ESXi</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-09-28T03:59:43.000Z" title="发表于 2022-09-28 11:59:43">2022-09-28</time></span></div><div class="content">软件准备Ventoy PE 工具，这里我使用的是微 PE带网卡驱动的 ESXI iso 文件
+我打包了需要的软件，懒得找的可以直接用我的。链接：https://pan.baidu.com/s/1hHHfWzF_yR6zN8UhbG9S2g?pwd&#x3D;p2bd提取码：p2bd
+刻录 U 盘
+把 Ventory 安装到 U 盘中
+
+
+
+使用微 PE 制作 iso 镜像
+
+
+
+将制作好的的 PE 以及 ESXI 的 iso 文件复制到 U 盘中
+
+系统安装
+进入 bios 关闭安全 boot。
+如果要安装的系统盘需要格式化，那么开机的时候按 F7，选择微 PE 系统进去格式化一下。如果不需要则跳过这一步。
+开机的时候按 F7，选择 ESXi 的系统进入，跟着步骤走即可。
+配置 ESXi 的网络，这里我使用的是 192.168.50.X 网段，可以根据自己的需求调整。
+
+</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/ygenbp/" title="MyBatis缓存机制"><img class="post-bg" src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MyBatis缓存机制"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/ygenbp/" title="MyBatis缓存机制">MyBatis缓存机制</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-09-21T05:43:57.000Z" title="发表于 2022-09-21 13:43:57">2022-09-21</time></span></div><div class="content">正如大多数持久层框架一样，MyBatis 同样提供了一级缓存和二级缓存的支持。
+MyBatis 的缓存分为一级缓存和二级缓存，两种缓存的缓存粒度是一样的，都是对应一条 sql 查询语句，但是二者的生命周期是不一样的，一级缓存的生命周期是 SqlSession 对象的使用期间，随着 SqlSession 对象的死亡而消失；二级缓存如果没有更新数据的话，最长可以和应用的生命周期一样长。
+首先查询二级缓存，然后再查询一级缓存。
+一级缓存一级缓存也叫本地缓存，在 MyBatis 中，一级缓存是在会话(SqlSession)层面实现的，这就说明一级缓存作用范围只能在同一个 SqlSession 中，跨 SqlSession 是无效的。当 Session flush 或 close 之后，该 Session 中的所有 Cache 就将清空。MyBatis 中一级缓存是默认开启的，不需要任何配置。
+
+这里我加一点我的个人理解（纯个人理解有争议我们可以讨论）MyBatis 的一级缓存存在的基础条件或者说理论依据是 MySql 的默认的事物隔离级别是可重复读，在同一个事务里面不管怎么读结果都是一样的，因 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">北梦</div><div class="author-info__description">技术博客,学习笔记</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">43</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/furacas"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/furacas" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:s.furacas@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa-solid fa-rss"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/eommabl8v90zmcau/" title="使用位掩码优雅表示多重状态"><img src="/img/cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用位掩码优雅表示多重状态"/></a><div class="content"><a class="title" href="/2023/eommabl8v90zmcau/" title="使用位掩码优雅表示多重状态">使用位掩码优雅表示多重状态</a><time datetime="2023-10-31T22:32:49.000Z" title="发表于 2023-11-01 06:32:49">2023-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/kcfuybdpcyglpzwu/" title="解决longhorn卸载的问题"><img src="/img/cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="解决longhorn卸载的问题"/></a><div class="content"><a class="title" href="/2023/kcfuybdpcyglpzwu/" title="解决longhorn卸载的问题">解决longhorn卸载的问题</a><time datetime="2023-10-18T15:10:17.000Z" title="发表于 2023-10-18 23:10:17">2023-10-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/wr1k938pe0tqfyq0/" title="搭建基于tailscale的k3s集群"><img src="/img/cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="搭建基于tailscale的k3s集群"/></a><div class="content"><a class="title" href="/2023/wr1k938pe0tqfyq0/" title="搭建基于tailscale的k3s集群">搭建基于tailscale的k3s集群</a><time datetime="2023-08-29T05:59:49.000Z" title="发表于 2023-08-29 13:59:49">2023-08-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/urdldnz7oe4ygxr4/" title="使用一个网段的ipv6地址作为出口ip"><img src="/img/cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用一个网段的ipv6地址作为出口ip"/></a><div class="content"><a class="title" href="/2023/urdldnz7oe4ygxr4/" title="使用一个网段的ipv6地址作为出口ip">使用一个网段的ipv6地址作为出口ip</a><time datetime="2023-08-27T04:49:04.000Z" title="发表于 2023-08-27 12:49:04">2023-08-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/li4wroltggfw0x6b/" title="Docker Wine环境下DLL注入的路径问题"><img src="/img/cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker Wine环境下DLL注入的路径问题"/></a><div class="content"><a class="title" href="/2023/li4wroltggfw0x6b/" title="Docker Wine环境下DLL注入的路径问题">Docker Wine环境下DLL注入的路径问题</a><time datetime="2023-07-12T03:28:42.000Z" title="发表于 2023-07-12 11:28:42">2023-07-12</time></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="item-headline"><i class="fas fa-comment-dots"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/excel/" style="font-size: 1.1em; color: #999">excel</a> <a href="/tags/Java/" style="font-size: 1.5em; color: #99a9bf">Java</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 1.17em; color: #999c9f">建站</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">安全</a> <a href="/tags/antlr/" style="font-size: 1.1em; color: #999">antlr</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 1.1em; color: #999">动态规划</a> <a href="/tags/%E8%BD%AF%E8%B7%AF%E7%94%B1/" style="font-size: 1.1em; color: #999">软路由</a> <a href="/tags/Github-Action/" style="font-size: 1.17em; color: #999c9f">Github Action</a> <a href="/tags/%E5%9B%BE/" style="font-size: 1.1em; color: #999">图</a> <a href="/tags/moviepy/" style="font-size: 1.1em; color: #999">moviepy</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 1.43em; color: #99a6b9">算法</a> <a href="/tags/OD/" style="font-size: 1.23em; color: #999ea6">OD</a> <a href="/tags/ubuntu/" style="font-size: 1.17em; color: #999c9f">ubuntu</a> <a href="/tags/pdf/" style="font-size: 1.1em; color: #999">pdf</a> <a href="/tags/leetcode/" style="font-size: 1.17em; color: #999c9f">leetcode</a> <a href="/tags/nginx/" style="font-size: 1.1em; color: #999">nginx</a> <a href="/tags/%E5%8F%8D%E8%AF%88%E9%AA%97/" style="font-size: 1.1em; color: #999">反诈骗</a> <a href="/tags/%E9%97%AE%E9%A2%98%E9%9A%8F%E8%AE%B0/" style="font-size: 1.17em; color: #999c9f">问题随记</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/docker/" style="font-size: 1.1em; color: #999">docker</a> <a href="/tags/java/" style="font-size: 1.1em; color: #999">java</a> <a href="/tags/C/" style="font-size: 1.1em; color: #999">C++</a> <a href="/tags/wine/" style="font-size: 1.1em; color: #999">wine</a> <a href="/tags/N5105/" style="font-size: 1.1em; color: #999">N5105</a> <a href="/tags/k8s/" style="font-size: 1.1em; color: #999">k8s</a> <a href="/tags/%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92/" style="font-size: 1.1em; color: #999">暴力递归</a> <a href="/tags/%E9%9A%8F%E8%BA%AB-wifi/" style="font-size: 1.1em; color: #999">随身 wifi</a> <a href="/tags/%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%84/" style="font-size: 1.1em; color: #999">产品测评</a> <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" style="font-size: 1.1em; color: #999">内网穿透</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 1.23em; color: #999ea6">汇编</a> <a href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" style="font-size: 1.5em; color: #99a9bf">瞎折腾</a> <a href="/tags/es/" style="font-size: 1.1em; color: #999">es</a> <a href="/tags/python/" style="font-size: 1.17em; color: #999c9f">python</a> <a href="/tags/canal/" style="font-size: 1.1em; color: #999">canal</a> <a href="/tags/poi/" style="font-size: 1.3em; color: #99a1ac">poi</a> <a href="/tags/code-server/" style="font-size: 1.1em; color: #999">code-server</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 1.1em; color: #999">并查集</a> <a href="/tags/%E9%80%86%E5%90%91/" style="font-size: 1.37em; color: #99a4b2">逆向</a> <a href="/tags/Windows/" style="font-size: 1.1em; color: #999">Windows</a> <a href="/tags/MyBatis/" style="font-size: 1.1em; color: #999">MyBatis</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/11/"><span class="card-archive-list-date">十一月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/10/"><span class="card-archive-list-date">十月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/08/"><span class="card-archive-list-date">八月 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/07/"><span class="card-archive-list-date">七月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/03/"><span class="card-archive-list-date">三月 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/01/"><span class="card-archive-list-date">一月 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/11/"><span class="card-archive-list-date">十一月 2022</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/10/"><span class="card-archive-list-date">十月 2022</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">43</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-03-05T09:19:34.103Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By 北梦</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: (str) => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: (subtitleType) => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        getScript('https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  }
+}
+</script><script>function subtitleType () {
+  if (true) {
+    typedJSFn.init(["分享、交流、成长","成长、生命、幸福、还有朋友","临渊羡鱼不如退而结网"])
+  } else {
+    document.getElementById("subtitle").textContent = "分享、交流、成长"
+  }
+}
+typedJSFn.run(subtitleType)</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-olive-xi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo@1.6.31/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

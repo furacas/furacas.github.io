@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>北梦的个人博客</title>
+  
+  
+  <link href="https://www.furacas.com/atom.xml" rel="self"/>
+  
+  <link href="https://www.furacas.com/"/>
+  <updated>2023-10-31T22:54:42.000Z</updated>
+  <id>https://www.furacas.com/</id>
+  
+  <author>
+    <name>北梦</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用位掩码优雅表示多重状态</title>
+    <link href="https://www.furacas.com/2023/eommabl8v90zmcau/"/>
+    <id>https://www.furacas.com/2023/eommabl8v90zmcau/</id>
+    <published>2023-10-31T22:32:49.000Z</published>
+    <updated>2023-10-31T22:54:42.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在编程和数据库设计中，经常会遇到需要存储多个状态或选项的情况。传统的做法可能需要用多个字段或者表来表示这些状态，这样不仅增加了数据的复杂性，还可能影响性能。本文将介绍如何使用位掩码来优雅、高效地解决这一问题。</p><h2 id="位掩码"><a href="#位掩码" class="headerlink" title="位掩码"></a>位掩码</h2><p>位掩码是一种编程技巧，说白了就是位操作。用单个整数的不同位来表示多个布尔值或状态。通过位运算（与、或、非等），可以高效地设置、清除、翻转和检查状态。</p><h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><ul><li>设置位（Set）: <code>mask |= (1 &lt;&lt; i)</code></li><li>清除位（Clear）: <code>mask &amp;= ~(1 &lt;&lt; i)</code></li><li>翻转位（Toggle）: <code>mask ^= (1 &lt;&lt; i)</code></li><li>检查位（Check）: <code>if (mask &amp; (1 &lt;&lt; i)) &#123;...&#125;</code></li></ul><h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>虽然位操作很方便，但是可读性并不是很好。所以需要进行封装一下，以增强其可读性。以 Java 枚举为例，我们可以把抽象的位操作封装起来</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.AllArgsConstructor;</span><br><span class="line"><span class="keyword">import</span> lombok.Getter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Role</span> &#123;</span><br><span class="line">    ADMIN(<span class="number">1</span> &lt;&lt; <span class="number">0</span>, <span class="string">&quot;ADMIN&quot;</span>),</span><br><span class="line">    EDITOR(<span class="number">1</span> &lt;&lt; <span class="number">1</span>, <span class="string">&quot;EDITOR&quot;</span>),</span><br><span class="line">    VIEWER(<span class="number">1</span> &lt;&lt; <span class="number">2</span>, <span class="string">&quot;VIEWER&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> bitmask;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String description;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Role&gt; <span class="title function_">getRolesByBitmask</span><span class="params">(<span class="type">int</span> bitmask)</span> &#123;</span><br><span class="line">        List&lt;Role&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Role role : Role.values()) &#123;</span><br><span class="line">            <span class="keyword">if</span> ((role.getBitmask() &amp; bitmask) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                result.add(role);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getBitmaskByRoles</span><span class="params">(Collection&lt;Role&gt; roles)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">bitmask</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (Role role : roles) &#123;</span><br><span class="line">            bitmask |= role.getBitmask();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bitmask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><p>找到具有多个特定角色（例如 ADMIN 和 EDITOR）的所有用户，可以这样写 SQL：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> (roles <span class="operator">&amp;</span> ?) <span class="operator">=</span> ?</span><br></pre></td></tr></table></figure><p>其中? 部分就是<code>getRolesByBitmask</code>计算出来的位<br>查找任一角色</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> (roles <span class="operator">&amp;</span> ?) <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;在编程和数据库设计中，经常会遇到需要存储多个状态或选项的情况。传统的做法可能需要用多个字段或者表来表示这些状态，这样不仅增加了数据的复杂性，</summary>
+      
+    
+    
+    
+    
+    <category term="java" scheme="https://www.furacas.com/tags/java/"/>
+    
+    <category term="问题随记" scheme="https://www.furacas.com/tags/%E9%97%AE%E9%A2%98%E9%9A%8F%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决longhorn卸载的问题</title>
+    <link href="https://www.furacas.com/2023/kcfuybdpcyglpzwu/"/>
+    <id>https://www.furacas.com/2023/kcfuybdpcyglpzwu/</id>
+    <published>2023-10-18T15:10:17.000Z</published>
+    <updated>2023-10-18T19:00:36.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>longhorn 使用 helm 卸载的时候需要<a href="https://longhorn.io/docs/1.5.1/references/settings/#deleting-confirmation-flag">deleting-confirmation-flag</a>为 true，官方给的命令是</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n longhorn-system patch -p <span class="string">&#x27;&#123;&quot;value&quot;: &quot;true&quot;&#125;&#x27;</span> --<span class="built_in">type</span>=merge lhs deleting-confirmation-flag</span><br></pre></td></tr></table></figure><p>执行报错</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error from server (NotFound): settings.longhorn.io <span class="string">&quot;deleting-confirmation-flag&quot;</span> not found</span><br></pre></td></tr></table></figure><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>看报错信息是没有这个 setting 所以无法用官方给的命令。<br>我猜因该是安装的时候被打断了没有完全安装导致这值没有被正确设置<br>既然没有，那就帮他新建一个</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n longhorn-system apply -f - &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">apiVersion: longhorn.io/v1beta1</span></span><br><span class="line"><span class="string">kind: Setting</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  name: deleting-confirmation-flag</span></span><br><span class="line"><span class="string">  namespace: longhorn-system</span></span><br><span class="line"><span class="string">value: &quot;true&quot;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;longhorn 使用 helm 卸载的时候需要&lt;a href=&quot;https://longhorn.io/docs/1.5.1/refere</summary>
+      
+    
+    
+    
+    
+    <category term="问题随记" scheme="https://www.furacas.com/tags/%E9%97%AE%E9%A2%98%E9%9A%8F%E8%AE%B0/"/>
+    
+    <category term="k8s" scheme="https://www.furacas.com/tags/k8s/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>搭建基于tailscale的k3s集群</title>
+    <link href="https://www.furacas.com/2023/wr1k938pe0tqfyq0/"/>
+    <id>https://www.furacas.com/2023/wr1k938pe0tqfyq0/</id>
+    <published>2023-08-29T05:59:49.000Z</published>
+    <updated>2023-10-21T08:59:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>10 月 22 日更新<br>k3s 已经官方支持了 taiscale，搭建起来更简单了，以下内容可能失效，请直接看文档。</p><p>本文是我基于 tailscale 的 k3s 集群搭建过程的笔记。</p><h2 id="安装-tailscale"><a href="#安装-tailscale" class="headerlink" title="安装 tailscale"></a>安装 tailscale</h2><p>首先需要在全部的服务器上安装 tailscale 并且加入到网络里面</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://tailscale.com/install.sh | sh</span><br><span class="line">tailscale up</span><br></pre></td></tr></table></figure><h2 id="安装-master"><a href="#安装-master" class="headerlink" title="安装 master"></a>安装 master</h2><p>主节点服务器安装 master<br>安装 k3s，注意替换 ip 地址</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> INSTALL_K3S_EXEC=<span class="string">&quot;server --node-ip MASTER_IP --flannel-iface tailscale0 &quot;</span></span><br><span class="line">curl -sfL https://get.k3s.io | sh -</span><br></pre></td></tr></table></figure><p>获取 master 的 token 一会用的到</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /var/lib/rancher/k3s/server/node-token</span><br></pre></td></tr></table></figure><h2 id="安装-node"><a href="#安装-node" class="headerlink" title="安装 node"></a>安装 node</h2><p>注意替换掉下面的 MASTER_IP、TOKEN、NODE_IP</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> K3S_URL=https://MASTER_IP:6443</span><br><span class="line"><span class="built_in">export</span> K3S_TOKEN=TOKEN</span><br><span class="line"><span class="built_in">export</span> INSTALL_K3S_EXEC=<span class="string">&quot;agent --flannel-iface=tailscale0 --node-ip NODE_IP --server=<span class="variable">$&#123;K3S_URL&#125;</span> --token=<span class="variable">$&#123;K3S_TOKEN&#125;</span>&quot;</span></span><br><span class="line">curl -sfL https://get.k3s.io | sh -</span><br></pre></td></tr></table></figure><p>其他的 node 重复一下就行了。这样集群就搭建完毕了。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;10 月 22 日更新&lt;br&gt;k3s 已经官方支持了 taiscale，搭建起来更简单了，以下内容可能失效，请直接看文档。&lt;/p&gt;
+&lt;p&gt;本文是我基于 tailscale 的 k3s 集群搭建过程的笔记。&lt;/p&gt;
+&lt;h2 id=&quot;安装-tailscale&quot;&gt;&lt;a href=</summary>
+      
+    
+    
+    
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用一个网段的ipv6地址作为出口ip</title>
+    <link href="https://www.furacas.com/2023/urdldnz7oe4ygxr4/"/>
+    <id>https://www.furacas.com/2023/urdldnz7oe4ygxr4/</id>
+    <published>2023-08-27T04:49:04.000Z</published>
+    <updated>2023-08-27T05:02:27.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>正常情况下选择出口 ip 的前提条件是要把这个 ip 静态配置在网卡上，但是如果是一个网段的 ipv6 可能难以做到的了。一方面他真的很多 linux 不支持配置这么多，另一方面性能也是个问题。因此这篇文章讨论的方案是一个动态话非配置的方式，直接在使用的时候指定 ip 的形式。</p><h2 id="1-动态绑定-IPv6-地址"><a href="#1-动态绑定-IPv6-地址" class="headerlink" title="1. 动态绑定 IPv6 地址"></a>1. 动态绑定 IPv6 地址</h2><h3 id="1-1-修改内核参数"><a href="#1-1-修改内核参数" class="headerlink" title="1.1 修改内核参数"></a>1.1 修改内核参数</h3><p>确保系统允许绑定非本地 IPv6 地址：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -w net.ipv6.ip_nonlocal_bind=1</span><br></pre></td></tr></table></figure><p>要使更改在重启后依然生效</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv6.ip_nonlocal_bind=1&quot;</span> | sudo <span class="built_in">tee</span> -a /etc/sysctl.conf</span><br></pre></td></tr></table></figure><h3 id="1-2-设置本地路由"><a href="#1-2-设置本地路由" class="headerlink" title="1.2 设置本地路由"></a>1.2 设置本地路由</h3><p>对于使用的 IPv6 地址或地址范围，需要创建一个本地路由条目：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route add <span class="built_in">local</span> 2XXX:XXXX:XXXX:XXe4::/64 dev eth0</span><br></pre></td></tr></table></figure><h2 id="2-配置-NDP-代理"><a href="#2-配置-NDP-代理" class="headerlink" title="2. 配置 NDP 代理"></a>2. 配置 NDP 代理</h2><p><code>ndppd</code>允许您对那些未直接分配给机器但您希望使用的 IPv6 地址进行代理。</p><h3 id="2-1-安装-NDP"><a href="#2-1-安装-NDP" class="headerlink" title="2.1 安装 NDP"></a>2.1 安装 NDP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install ndppd</span><br></pre></td></tr></table></figure><h3 id="2-2-添加配置："><a href="#2-2-添加配置：" class="headerlink" title="2.2 添加配置："></a>2.2 添加配置：</h3><p><code>/etc/ndppd.conf</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">route-ttl 30000</span><br><span class="line">proxy eth0 &#123;</span><br><span class="line">  router no</span><br><span class="line">  <span class="built_in">timeout</span> 500</span><br><span class="line">  ttl 30000</span><br><span class="line">  rule 2XXX:XXXX:XXXX:XXe4::/64 &#123;</span><br><span class="line">    static</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-3-启动服务"><a href="#2-3-启动服务" class="headerlink" title="2.3 启动服务"></a>2.3 启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start ndppd</span><br></pre></td></tr></table></figure><h2 id="3-使用"><a href="#3-使用" class="headerlink" title="3. 使用"></a>3. 使用</h2><p>这样就可以在直接指定出口 ip</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --interface 2XXX:XXXX:XXXX:XXe4::2 ipv6.ip.sb</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;正常情况下选择出口 ip 的前提条件是要把这个 ip 静态配置在网卡上，但是如果是一个网段的 ipv6 可能难以做到的了。一方面他真的很多 linux 不支持配置这么多，另一方面性能也是个问题。因此这篇文章讨论的方案是一个动态话非配置的方式，直接在使用的时候指定 ip 的形</summary>
+      
+    
+    
+    
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker Wine环境下DLL注入的路径问题</title>
+    <link href="https://www.furacas.com/2023/li4wroltggfw0x6b/"/>
+    <id>https://www.furacas.com/2023/li4wroltggfw0x6b/</id>
+    <published>2023-07-12T03:28:42.000Z</published>
+    <updated>2023-07-12T22:19:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Wine 环境下进行 DLL 注入时，我遇到了一个奇怪的现象。尽管 DLL 成功注入，但随后程序却立即进入了 DLL_THREAD_DETACH 的生命周期阶段。这个问题困扰了我一段时间，后来我注意到，如果我在 Wine 的目录下（~&#x2F;.wine）或者 WORKDIR 启动 exe，DLL 注入后程序就不会自动退出。</p><p>我怀疑这和 DLL 的搜索路径有关，在 Linux 环境可能没办法做的那么完美，或者和 Wine 的实现相关。如果大家有遇到类似的问题，可以尝试一下在 Wine 目录或者 WORKDIR 启动 exe 程序。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Wine 环境下进行 DLL 注入时，我遇到了一个奇怪的现象。尽管 DLL 成功注入，但随后程序却立即进入了 DLL_THREAD_DETACH 的生命周期阶段。这个问题困扰了我一段时间，后来我注意到，如果我在 Wine 的目录下（~&amp;#x2F;.wine）或者 WORKD</summary>
+      
+    
+    
+    
+    
+    <category term="逆向" scheme="https://www.furacas.com/tags/%E9%80%86%E5%90%91/"/>
+    
+    <category term="C++" scheme="https://www.furacas.com/tags/C/"/>
+    
+    <category term="wine" scheme="https://www.furacas.com/tags/wine/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Github更换主邮箱导致无法登录Vultr</title>
+    <link href="https://www.furacas.com/2023/ah3atks8nht1hfz1/"/>
+    <id>https://www.furacas.com/2023/ah3atks8nht1hfz1/</id>
+    <published>2023-03-24T21:21:25.000Z</published>
+    <updated>2023-07-22T06:45:06.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>vultr 的 github 登录竟然是邮箱来识别的，真他妈的离谱。<br>这个邮箱目前在 vultr 上也无法修改，真是蛋疼。</p><h2 id="蛋疼的过程"><a href="#蛋疼的过程" class="headerlink" title="蛋疼的过程"></a>蛋疼的过程</h2><p>昨天发现 vultr 登录不上去了，提示<code>Invalid username/password</code>但是服务器还是可以用的。<br><img src="/images/1679723675602-a7e058a0-2970-4176-9b1d-0cbe4d296bce.png"><br>网上有说是被封号&#x2F;删号了。因为我这边的的服务器还是可用的， 所以我排除了这种可能性。</p><p>发了一个邮件给他来询问账号怎么了。<br>很快收到了回复，一个扯皮邮件。<br><img src="/images/1679722402041-deb3a14a-1dde-4df6-962c-a633c2074385.png"></p><p>我最后一次登录 vultr 是在一个月前，我就回忆了一下这个月自己对 github 账号进行了什么操作，改了个名字， 换了个邮箱。我一开始在想，vultr 不会这么蠢吧。然后，我就把 github 邮箱换回去了，然后就可以正常登录了。</p><h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>因为那个邮箱我不在作为主邮箱使用，vultr 目前也无法在页面上进行修改邮箱，发了个邮件问了一下，Github 登陆的邮箱不支持修改。 看来只能等钱用完了换个号了。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h2&gt;&lt;p&gt;vultr 的 github 登录竟然是邮箱来识别的，真他妈的离谱。&lt;br&gt;这个邮箱目前在 vultr 上也无法修改，真是蛋疼。&lt;/p&gt;
+&lt;</summary>
+      
+    
+    
+    
+    
+    <category term="建站" scheme="https://www.furacas.com/tags/%E5%BB%BA%E7%AB%99/"/>
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决poi读出来的sheet个数和实际看到个数不一致</title>
+    <link href="https://www.furacas.com/2023/extlf0qnrsemi3pi/"/>
+    <id>https://www.furacas.com/2023/extlf0qnrsemi3pi/</id>
+    <published>2023-03-02T21:59:47.000Z</published>
+    <updated>2023-03-02T22:21:43.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>业务那边给了个 excel，用 office 软件打开只显示一个 Sheet，但是使用 poi 读可以读出来 3 个 sheet，并且看了这个 excel 确实没有隐藏 sheet。</p><h2 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h2><p>一开始用了一些关键字并没有找到相应的结果。并且使用 poi 查看这个看不到的 sheet 的 isHidden 也确实都是 fasle。<br>后来快要放弃的时候，发现了 poi 接口有个方法</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.poi.ss.usermodel.Workbook#getSheetVisibility</span><br></pre></td></tr></table></figure><p>这个方法和 isHidden 是同一个层级的，只是因为在找 isHidden 的时候 ide 自动提示出来的。然后我就调用了一下这个方法，发现看不到的 excel 使用这个方法返回的是<code>VERY_HIDDEN</code>这个枚举值。</p><p>有了这个关键字，然后去搜索这个关键字就比较容易了。找到了一个比较好的解释，链接我放到参考里面去了。大概意思 excel 有一种 very hidden 模式，这个模式默认情况下不会漏出来，需要在开发者模式下，或者像我这样用 poi 才能看到。</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://theexcelclub.com/excel-hidden-and-very-hidden-sheets-whats-the-difference/">https://theexcelclub.com/excel-hidden-and-very-hidden-sheets-whats-the-difference/</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;业务那边给了个 excel，用 office 软件打开只显示一个 Sheet，但是使用 poi 读可以读出来 3 个 sheet，并且看了这</summary>
+      
+    
+    
+    
+    
+    <category term="poi" scheme="https://www.furacas.com/tags/poi/"/>
+    
+    <category term="excel" scheme="https://www.furacas.com/tags/excel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Windows远程唤醒</title>
+    <link href="https://www.furacas.com/2023/fp3cf4gliz868x9t/"/>
+    <id>https://www.furacas.com/2023/fp3cf4gliz868x9t/</id>
+    <published>2023-01-30T23:17:38.000Z</published>
+    <updated>2023-02-09T07:36:59.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为需要可能偶尔会需要远程一下家里的电脑，但是太穷了电脑不能一直开机。</p><h2 id="通电唤醒"><a href="#通电唤醒" class="headerlink" title="通电唤醒"></a>通电唤醒</h2><p>这是之前用的方案，在电源上接一个智能插座，bios 设置通电自动开机。</p><h2 id="网络唤醒"><a href="#网络唤醒" class="headerlink" title="网络唤醒"></a>网络唤醒</h2><p>可以参考一下这篇文章<a href="https://sspai.com/post/67003">https://sspai.com/post/67003</a>，说的比较详细了，设置网卡唤醒，然后使用 App 发送请求达到唤醒的目的。</p><h2 id="开机卡"><a href="#开机卡" class="headerlink" title="开机卡"></a>开机卡</h2><p>这是我现在用的方案。比起网络唤醒更省电。<br>而且现在的开机卡都比较智能了。可以直连家里的智能家居，可以受到小爱同学或者 siri 的控制。淘宝一搜就有。</p><p>开机卡一般使用 PCIE 供电，当然也有 USB 供电的。这里要额外说一下 PCIE 供电的，一般的主板都会有 PCIE 供电口，但是可能是消费级别的主板这个口一般用的不多，网上看到很多人都在吐槽显卡会挡住这个口，刚好我的主板的 PCIE 口就被显卡挡住了，而且是两个都被挡住了。没办法只要接了一个 PCIE 扩展线，把口接出来才能用。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;因为需要可能偶尔会需要远程一下家里的电脑，但是太穷了电脑不能一直开机。&lt;/p&gt;
+&lt;h2 id=&quot;通电唤醒&quot;&gt;&lt;a href=&quot;#通电唤醒&quot; class=&quot;headerlink&quot; title=&quot;通电唤醒&quot;&gt;&lt;/a&gt;通电唤醒&lt;/h2&gt;&lt;p&gt;这是之前用的方案，在电源上接一个智能插</summary>
+      
+    
+    
+    
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>岛屿的数量</title>
+    <link href="https://www.furacas.com/2023/kyfz3rh4qhrdvqaz/"/>
+    <id>https://www.furacas.com/2023/kyfz3rh4qhrdvqaz/</id>
+    <published>2023-01-16T23:36:02.000Z</published>
+    <updated>2023-01-16T23:45:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>原题连接 <a href="https://leetcode.cn/problems/number-of-islands/description/">https://leetcode.cn/problems/number-of-islands/description/</a></p><h2 id="方法-1-并查集"><a href="#方法-1-并查集" class="headerlink" title="方法 1 并查集"></a>方法 1 并查集</h2><p>这是一个很典型的并查集问题。初始化并查集，把全部的陆地分别设置成单独的集合，然后遍历，如果有陆地相连则把集合合并，最后计算最后剩余的集合个数</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">numIslands</span>(<span class="params">self, grid: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        union_find = UnionFind(grid)</span><br><span class="line">        l1,l2 = <span class="built_in">len</span>(grid),<span class="built_in">len</span>(grid[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(l1):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(l2):</span><br><span class="line">                <span class="keyword">if</span> grid[i][j] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                    <span class="comment"># 这里做不做这个都可以，因为并查集做了路径压缩，这里改成0是优化，但是影响不大</span></span><br><span class="line">                    grid[i][j] == <span class="string">&#x27;0&#x27;</span></span><br><span class="line">                    <span class="keyword">if</span> i &gt; <span class="number">1</span> <span class="keyword">and</span> grid[i - <span class="number">1</span>][j] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                        union_find.union((i,j), (i-<span class="number">1</span>,j))</span><br><span class="line">                    <span class="keyword">if</span> i + <span class="number">1</span> &lt; l1 <span class="keyword">and</span> grid[i + <span class="number">1</span>][j] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                        union_find.union((i,j), (i+<span class="number">1</span>,j))</span><br><span class="line">                    <span class="keyword">if</span> j &gt; <span class="number">1</span> <span class="keyword">and</span> grid[i][j - <span class="number">1</span>] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                        union_find.union((i,j), (i,j - <span class="number">1</span>))</span><br><span class="line">                    <span class="keyword">if</span> j + <span class="number">1</span> &lt;  l2 <span class="keyword">and</span> grid[i][j + <span class="number">1</span>] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                        union_find.union((i,j), (i,j + <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> union_find.count()</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UnionFind</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,grid</span>):</span><br><span class="line">        self.cnt = <span class="number">0</span></span><br><span class="line">        self.par = &#123;&#125;</span><br><span class="line">        l1,l2 = <span class="built_in">len</span>(grid),<span class="built_in">len</span>(grid[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(l1):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(l2):</span><br><span class="line">                <span class="keyword">if</span> grid[i][j] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                    self.par[(i,j)] = (i,j)</span><br><span class="line">                    self.cnt += <span class="number">1</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">self,p</span>):</span><br><span class="line">        <span class="keyword">if</span> p <span class="keyword">not</span> <span class="keyword">in</span> self.par:</span><br><span class="line">            self.par[p] = p</span><br><span class="line">            self.cnt += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> self.par[p] != p:</span><br><span class="line">            self.par[p] = self.find(self.par[p])</span><br><span class="line">        <span class="keyword">return</span> self.par[p]</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">union</span>(<span class="params">self,p1,p2</span>):</span><br><span class="line">        <span class="keyword">if</span> self.find(p1) != self.find(p2):</span><br><span class="line">            self.par[self.find(p1)] = self.find(p2)</span><br><span class="line">            self.cnt -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">count</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.cnt</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;原题连接 &lt;a href=&quot;https://leetcode.cn/problems/number-of-islands/description/&quot;&gt;https://leetcode.cn/problems/number-of-islands/description/&lt;/a</summary>
+      
+    
+    
+    
+    
+    <category term="算法" scheme="https://www.furacas.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="leetcode" scheme="https://www.furacas.com/tags/leetcode/"/>
+    
+    <category term="并查集" scheme="https://www.furacas.com/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>常用python3刷题语法</title>
+    <link href="https://www.furacas.com/2022/bhqthr46qrk62ikq/"/>
+    <id>https://www.furacas.com/2022/bhqthr46qrk62ikq/</id>
+    <published>2022-11-29T05:21:23.000Z</published>
+    <updated>2023-01-15T22:06:06.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为主编程语言不是 python，很多语法容易忘，特意记录一下。</p><h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><h3 id="普通循环"><a href="#普通循环" class="headerlink" title="普通循环"></a>普通循环</h3><p>range 是左闭右开区间</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">10</span>):</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure><h3 id="逆序"><a href="#逆序" class="headerlink" title="逆序"></a>逆序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>, <span class="number">0</span>, -<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure><p>循环变量在循环体外面依然可以用</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">10</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># 这里输出的是9，并不等价于类c语言里面的 for(i = 0;i &lt; 10; i++)</span></span><br><span class="line"><span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure><h3 id="enumerate"><a href="#enumerate" class="headerlink" title="enumerate"></a>enumerate</h3><p>返回的元组第一个参数是 index</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;abcd&quot;</span><br><span class="line">for i,c in enumerate(s):</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 复制数组</span></span><br><span class="line">b = a[:]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取前四个数</span></span><br><span class="line">b = a[:<span class="number">4</span>]</span><br><span class="line">b = a[<span class="number">0</span>:<span class="number">4</span>]</span><br><span class="line">b = a[<span class="number">0</span>:<span class="number">4</span>:<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取前四个没隔两个一取</span></span><br><span class="line">b = a[:<span class="number">4</span>:<span class="number">2</span>]</span><br></pre></td></tr></table></figure><h3 id="数组比较"><a href="#数组比较" class="headerlink" title="数组比较"></a>数组比较</h3><p>直接比就可以了</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list1 == list2</span><br></pre></td></tr></table></figure><h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="按照字典序排序"><a href="#按照字典序排序" class="headerlink" title="按照字典序排序"></a>按照字典序排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="string">&quot;dcba&quot;</span></span><br><span class="line">b = <span class="string">&quot;&quot;</span>.join(<span class="built_in">sorted</span>(a))</span><br></pre></td></tr></table></figure><h3 id="转换成-asc-码"><a href="#转换成-asc-码" class="headerlink" title="转换成 asc 码"></a>转换成 asc 码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br></pre></td></tr></table></figure><h3 id="切片-1"><a href="#切片-1" class="headerlink" title="切片"></a>切片</h3><p>同数组</p><h3 id="字符串是否是数字"><a href="#字符串是否是数字" class="headerlink" title="字符串是否是数字"></a>字符串是否是数字</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">str</span>.isdigit()</span><br></pre></td></tr></table></figure><h3 id="字符串是否是由数字和字母组成"><a href="#字符串是否是由数字和字母组成" class="headerlink" title="字符串是否是由数字和字母组成"></a>字符串是否是由数字和字母组成</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">str</span>.isalnum()</span><br></pre></td></tr></table></figure><h3 id="转大小写"><a href="#转大小写" class="headerlink" title="转大小写"></a>转大小写</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">str</span>.lower()</span><br><span class="line"><span class="built_in">str</span>.upper()</span><br></pre></td></tr></table></figure><h2 id="collections"><a href="#collections" class="headerlink" title="collections"></a>collections</h2><h3 id="Counter"><a href="#Counter" class="headerlink" title="Counter"></a>Counter</h3><p>可以用来统计字符出现的个数</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;A&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;A&quot;</span>]</span><br><span class="line">b = collections.Counter(a)</span><br></pre></td></tr></table></figure><p>返回的是个字典</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;A&#x27;: 3, &#x27;B&#x27;: 1, &#x27;C&#x27;: 1&#125;</span><br></pre></td></tr></table></figure><h3 id="defaultdict"><a href="#defaultdict" class="headerlink" title="defaultdict"></a>defaultdict</h3><p>相比于 dict 可以在 key 不存在的时候返回一个默认值，而不是报错</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = collections.defaultdict(<span class="built_in">list</span>)</span><br><span class="line">a = collections.defaultdict(<span class="built_in">int</span>)</span><br><span class="line">a = collections.defaultdict(<span class="built_in">set</span>)</span><br><span class="line">a = collections.defaultdict(<span class="built_in">set</span>)</span><br><span class="line"></span><br><span class="line">a = collections.defaultdict(<span class="keyword">lambda</span>: <span class="number">10</span>)</span><br></pre></td></tr></table></figure><h2 id="数学相关"><a href="#数学相关" class="headerlink" title="数学相关"></a>数学相关</h2><h3 id="开方"><a href="#开方" class="headerlink" title="开方"></a>开方</h3><p>会返回一个浮点数</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line">a = math.sqrt(<span class="number">16</span>)</span><br></pre></td></tr></table></figure><h3 id="乘方"><a href="#乘方" class="headerlink" title="乘方"></a>乘方</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="built_in">pow</span>(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">a = <span class="number">3</span> ** <span class="number">4</span></span><br></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h3><p>将可迭代的对象打包成元组</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">b = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">c = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br><span class="line">d = <span class="built_in">list</span>(<span class="built_in">zip</span>(a, b, c))</span><br></pre></td></tr></table></figure><p>输出</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[(1, 2, 4), (2, 3, 5), (3, 4, 6)]</span><br></pre></td></tr></table></figure><h3 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h3><p>函数将一个数据集合（链表，元组等）中的所有数据进行下列操作：用传给 reduce 中的函数 function（有两个参数）先对集合中的第 1、2 个元素进行操作，得到的结果再与第三个数据用 function 函数运算，最后得到一个结果。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s = reduce(<span class="keyword">lambda</span> x, y: x+y, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当然在python中 list相加不需要自己写</span></span><br><span class="line">s = <span class="built_in">sum</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br></pre></td></tr></table></figure><h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><p>map 会根据提供的函数对指定序列做映射</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> map(lambda x: x ** 2, [1, 2, 3])</span><br><span class="line">[1, 4, 9]</span><br></pre></td></tr></table></figure><h3 id="all"><a href="#all" class="headerlink" title="all"></a>all</h3><p>判断一个集合是否全部为 true&#x2F;非空</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all([1,2,3])</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;因为主编程语言不是 python，很多语法容易忘，特意记录一下。&lt;/p&gt;
+&lt;h2 id=&quot;循环&quot;&gt;&lt;a href=&quot;#循环&quot; class=&quot;headerlink&quot; title=&quot;循环&quot;&gt;&lt;/a&gt;循环&lt;/h2&gt;&lt;h3 id=&quot;普通循环&quot;&gt;&lt;a href=&quot;#普通循环&quot; cla</summary>
+      
+    
+    
+    
+    
+    <category term="算法" scheme="https://www.furacas.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="python" scheme="https://www.furacas.com/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pdfbox实现pdf合并</title>
+    <link href="https://www.furacas.com/2022/pg89hgy7pr4o41wn/"/>
+    <id>https://www.furacas.com/2022/pg89hgy7pr4o41wn/</id>
+    <published>2022-11-28T23:03:28.000Z</published>
+    <updated>2022-12-03T06:52:17.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>目前 Java 的 pdf 文档合并方案常见的有 spire.doc.free、itextpdf、pdfbox 三种。spire.doc.free 的免费版本有页数限制，这里就不考虑了。而性能最好的 itext 的开源协议是<a href="https://github.com/itext/itextpdf/blob/develop/LICENSE.md">AGPL</a>，为了避免以后可能出现的麻烦我放弃了他，选择了可以商用比较友好的 pdfbox。</p><h2 id="pdfbox"><a href="#pdfbox" class="headerlink" title="pdfbox"></a>pdfbox</h2><p>Apache pdfbox 是一个开源 Java 库，可用于创建，渲染，打印，拆分，合并，更改，验证和提取 pdf 文件的文本和元数据。</p><h3 id="maven-依赖"><a href="#maven-依赖" class="headerlink" title="maven 依赖"></a>maven 依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.pdfbox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pdfbox<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.24<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure><h3 id="pdf-合并"><a href="#pdf-合并" class="headerlink" title="pdf 合并"></a>pdf 合并</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">mergePdf</span><span class="params">(String... path)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">PDFMergerUtility</span> <span class="variable">pdfMerger</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PDFMergerUtility</span>();</span><br><span class="line">    pdfMerger.setDestinationFileName(<span class="string">&quot;target/merged.pdf&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (String s : path) &#123;</span><br><span class="line">        pdfMerger.addSource(ResourceUtils.getFile(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    pdfMerger.mergeDocuments(<span class="literal">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;目前 Java 的 pdf 文档合并方案常见的有 spire.doc.free、itextpdf、pdfbox 三种。spire.doc.free 的免费版本有页数限制，这里就不考虑了。而性能最好的 itext 的开源协议是&lt;a href=&quot;https://github.c</summary>
+      
+    
+    
+    
+    
+    <category term="Java" scheme="https://www.furacas.com/tags/Java/"/>
+    
+    <category term="pdf" scheme="https://www.furacas.com/tags/pdf/"/>
+    
+    <category term="pdfbox" scheme="https://www.furacas.com/tags/pdfbox/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java字符串split、replaceAll忽略全半角和大小写</title>
+    <link href="https://www.furacas.com/2022/fiuy92xf21391fgf/"/>
+    <id>https://www.furacas.com/2022/fiuy92xf21391fgf/</id>
+    <published>2022-11-24T21:07:31.000Z</published>
+    <updated>2022-12-11T18:14:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="replaceAll"><a href="#replaceAll" class="headerlink" title="replaceAll"></a>replaceAll</h2><p>忽略大小写很简，使用正则就可以实现</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> <span class="string">&quot;Hello word&quot;</span>.replaceAll(<span class="string">&quot;(?i)hello&quot;</span>,<span class="string">&quot;你好&quot;</span>);</span><br></pre></td></tr></table></figure><p>忽略全角半角就需要自己实现了，实现思路是把原字符串、要匹配的字符串全部转换成半角（全角），然后对转换后的字符串做 indexOf，得到 index 之后替换原字符串。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">replaceAllIgnoreHalfFull</span><span class="params">(String source, String toReplace, String replacement)</span> &#123;</span><br><span class="line">    <span class="type">StringBuilder</span> <span class="variable">sbSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(source);</span><br><span class="line">    <span class="type">StringBuilder</span> <span class="variable">sbSourceHalf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(StringUtils.fullToHalf(source));</span><br><span class="line">    <span class="type">String</span> <span class="variable">searchString</span> <span class="operator">=</span> StringUtils.fullToHalf(toReplace);</span><br><span class="line">    <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>((idx = sbSourceHalf.indexOf(searchString, idx)) != -<span class="number">1</span>) &#123;</span><br><span class="line">        sbSource.replace(idx, idx + searchString.length(), replacement);</span><br><span class="line">        idx += searchString.length();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sbSource.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="split"><a href="#split" class="headerlink" title="split"></a>split</h2><p>原理和上面一样</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title function_">split</span><span class="params">(String source,String separator)</span>&#123;</span><br><span class="line">    <span class="type">StringBuilder</span> <span class="variable">sbSourceHalf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(StringUtils.fullToHalf(source));</span><br><span class="line">    <span class="type">String</span> <span class="variable">separatorStr</span> <span class="operator">=</span> StringUtils.fullToHalf(separator);</span><br><span class="line">    <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> separatorStr.length();</span><br><span class="line">    <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">termStart</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    List&lt;String&gt; ret = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span>((idx = sbSourceHalf.indexOf(separatorStr, idx)) != -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">term</span> <span class="operator">=</span> source.substring(termStart,idx);</span><br><span class="line">        ret.add(term);</span><br><span class="line">        idx +=  separatorStr.length();</span><br><span class="line">        termStart = idx;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret.add(source.substring(termStart));</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;replaceAll&quot;&gt;&lt;a href=&quot;#replaceAll&quot; class=&quot;headerlink&quot; title=&quot;replaceAll&quot;&gt;&lt;/a&gt;replaceAll&lt;/h2&gt;&lt;p&gt;忽略大小写很简，使用正则就可以实现&lt;/p&gt;
+&lt;figure class=&quot;h</summary>
+      
+    
+    
+    
+    
+    <category term="Java" scheme="https://www.furacas.com/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java word转pdf方案</title>
+    <link href="https://www.furacas.com/2022/wz2mz59xvzm6f9b5/"/>
+    <id>https://www.furacas.com/2022/wz2mz59xvzm6f9b5/</id>
+    <published>2022-11-23T00:17:48.000Z</published>
+    <updated>2022-12-03T06:57:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="方案调研"><a href="#方案调研" class="headerlink" title="方案调研"></a>方案调研</h1><h2 id="xdocreport"><a href="#xdocreport" class="headerlink" title="xdocreport"></a>xdocreport</h2><p><a href="https://github.com/opensagres/xdocreport">https://github.com/opensagres/xdocreport</a><br>我测试的最新版本(2.0.3)使用图片会报错，默认不是识别汉子（大概因为字体原因？），不支持批注。<br>网上了解到的可能 word 格式要求较大。</p><h2 id="Aspose"><a href="#Aspose" class="headerlink" title="Aspose"></a>Aspose</h2><p><a href="https://www.aspose.com/">https://www.aspose.com/</a><br>应该是最完美的方案，但是收费，不便宜<br><img src="/images/1669194121506-cf95425d-ebfc-463e-b6b6-09b50c900d2f.png"></p><h2 id="WPS-云服务"><a href="#WPS-云服务" class="headerlink" title="WPS 云服务"></a>WPS 云服务</h2><p>定价未知，文档上没有明确出来。<br>需要注册认证成为服务商<br>需要服务暴露到公网上，因为 wps 会回掉服务。<br><img src="/images/1669261180257-216a1bea-f829-497a-90cd-e43f191a6de3.png"><br>格式没有测试，应该会和 office 有细微的差距。</p><h2 id="阿里云服务"><a href="#阿里云服务" class="headerlink" title="阿里云服务"></a>阿里云服务</h2><p>接口八分钱一次，必须使用阿里云 oss。网上资料很少，个人感觉效果不错，口碑未知。<br><img src="/images/1669262327034-9513b07a-166b-41e3-9af9-1fea6f8f8fac.png"><br>应该是最佳方案。</p><h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="Libreoffice"><a href="#Libreoffice" class="headerlink" title="Libreoffice"></a>Libreoffice</h2><p>需要安装 Libreoffice<br>可以使用程序去调用他自带的 soffice 工具来转或者通过 UNO 的方式<br>排版会有差异，而且也涉及到字体问题，涉及到字体版权问题。</p><h2 id="Jacob"><a href="#Jacob" class="headerlink" title="Jacob"></a>Jacob</h2><p>仅支持 windows，大致原理就是调用 Microsoft Office &#x2F; WPS 来实现转换，当然需要安装对应的软件，因为我们生产系统肯定部署在 linux 上面，这个方案肯定不行。</p><h2 id="JobConverter"><a href="#JobConverter" class="headerlink" title="JobConverter"></a>JobConverter</h2><p>本质上也是调用 Microsoft Office 或 Libreoffice 完成的转换。需要装对应的软件。</p><h2 id="docx4j"><a href="#docx4j" class="headerlink" title="docx4j"></a>docx4j</h2><p>引入一个 jar 包即可。<br>有字体问题，需要设置字体，不然中文会是乱码。<br>支持图片，不支持批注，批注会渲染成报错信息直接出现在输出的 pdf 中（这个就比较蛋了，哪怕你不显示也行啊）一些 word 中设置的格式无法体现出来，比如一些样式，表格的自动换行等。</p><p><img src="/images/1669196381100-0676c37a-98f7-4cb0-b4af-5ce496ee2a6a.png"></p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>docx4j、xdocreport 可以在不安装 office 的情况下完成转换，但是格式问题有点大，我们需求的 word 还是蛮复杂的。云服务阿里云的价格还行。其他方案都需要安装软件。关键软件还不小。如果需要免费方案的话，我可能会选择用 Libreoffice 的方案，docker 打一个装好 Libreoffice 的出来，把他变成服务，用程序去调用他。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;方案调研&quot;&gt;&lt;a href=&quot;#方案调研&quot; class=&quot;headerlink&quot; title=&quot;方案调研&quot;&gt;&lt;/a&gt;方案调研&lt;/h1&gt;&lt;h2 id=&quot;xdocreport&quot;&gt;&lt;a href=&quot;#xdocreport&quot; class=&quot;headerlink&quot; titl</summary>
+      
+    
+    
+    
+    
+    <category term="poi" scheme="https://www.furacas.com/tags/poi/"/>
+    
+    <category term="Java" scheme="https://www.furacas.com/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Excel设置最小行高</title>
+    <link href="https://www.furacas.com/2022/ggzyo25qm594eqcr/"/>
+    <id>https://www.furacas.com/2022/ggzyo25qm594eqcr/</id>
+    <published>2022-11-22T00:56:00.000Z</published>
+    <updated>2022-11-24T21:09:04.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>有个需求，导出导出的 Excel 需要设置最小高度，比如最小高度是 56px，当内容的高度低于 56 的时候，行高设置为 56，当内容高度大于 56 的时候，根据内容高度自适应。</p><p>因为 excel 的行高只能设置固定大小，或者设置自适应，而没办法设置上述最小行高，所以普通的办法是做不到这个需求的。</p><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>可以通过设置字体大小来解决这个最小行高问题。也不知道这是 excel 的 feat 还是 bug。</p><ol><li><p>设置单元格格式——对齐——自动换行——确定</p></li><li><p>选中一列不使用的列(空白列)，把字体设置一下，这样就有了一个最小行高，比如如果字体大小是 18，那么最小行高就是 22.5。</p></li></ol><p>这样可以解决问题，但是相当于废了一个 cell，不过可以接受。</p><p>如果换成代码实现的话，可以用 poi 去按照上述步骤设置，当然也可以自己提前编辑好一个模版文件，<br>然后使用 poi 直接 copy 模版文件的格式。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;有个需求，导出导出的 Excel 需要设置最小高度，比如最小高度是 56px，当内容的高度低于 56 的时候，行高设置为 56，当内容高度大</summary>
+      
+    
+    
+    
+    
+    <category term="poi" scheme="https://www.furacas.com/tags/poi/"/>
+    
+    <category term="Java" scheme="https://www.furacas.com/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决poi插入的换行符无法被复制的问题</title>
+    <link href="https://www.furacas.com/2022/cddgaa/"/>
+    <id>https://www.furacas.com/2022/cddgaa/</id>
+    <published>2022-11-04T02:03:34.000Z</published>
+    <updated>2022-12-03T06:57:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>在 word 中有两种换行，一种是直接按下回车的”段落换行”<img src="/images/1667556405124-28604506-8839-4231-8038-fd17fc9e1802.png">而另一种换行符是按下 shift + 回车打出来的换行符 <img src="/images/1667556470690-9489e920-0b49-4c04-8984-f0e11a0b40f4.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## 第一种换行符</span><br><span class="line">org.apache.poi.xwpf.usermodel.XWPFRun#addCarriageReturn()</span><br><span class="line"></span><br><span class="line">## 第二种换行符</span><br><span class="line">org.apache.poi.xwpf.usermodel.XWPFRun#addBreak()</span><br></pre></td></tr></table></figure><p>第一种换行符比较符合我们日常的使用习惯，但是使用上述 api 打出来的换行符可以在 word 中被正常识别，但是无法通过复制的方式把这个换行符复制到一段文本中。<br>举个例子，如下 word 内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">第一行</span><br><span class="line">第二行</span><br><span class="line">第三行</span><br></pre></td></tr></table></figure><p>复制到文本文件中变成</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">第一行 第二行 第三行</span><br></pre></td></tr></table></figure><p>而我们直接在 word 中敲出来的回车换行符可以被正确复制。</p><h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>因为直接使用 poi 的 api 无法解决这个问题，所以只能另辟蹊径。最后参考<a href="https://stackoverflow.com/questions/14830667/insert-a-line-break-inside-a-paragraph-in-xwpfdocument">https://stackoverflow.com/questions/14830667/insert-a-line-break-inside-a-paragraph-in-xwpfdocument</a> 这篇文章实现的。<br>既然换行符不行，那就新建一个段落来解决这个问题。</p><p>原文代码如下，因为我这边涉及到业务代码，我就不贴出来了，本质都是一样的。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">replaceElementInParagraphs</span><span class="params">(List&lt;XWPFParagraph&gt; xwpfParagraphs,</span></span><br><span class="line"><span class="params">                                              Map&lt;String, String&gt; replacedMap)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!searchInParagraphs(xwpfParagraphs, replacedMap)) &#123;</span><br><span class="line">            replaceElementInParagraphs(xwpfParagraphs, replacedMap);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">searchInParagraphs</span><span class="params">(List&lt;XWPFParagraph&gt; xwpfParagraphs, Map&lt;String, String&gt; replacedMap)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span>(XWPFParagraph xwpfParagraph : xwpfParagraphs) &#123;</span><br><span class="line">            List&lt;XWPFRun&gt; xwpfRuns = xwpfParagraph.getRuns();</span><br><span class="line">            <span class="keyword">for</span>(XWPFRun xwpfRun : xwpfRuns) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">xwpfRunText</span> <span class="operator">=</span> xwpfRun.getText(xwpfRun.getTextPosition());</span><br><span class="line">                <span class="keyword">for</span>(Map.Entry&lt;String, String&gt; entry : replacedMap.entrySet()) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (xwpfRunText != <span class="literal">null</span> &amp;&amp; xwpfRunText.contains(entry.getKey())) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (entry.getValue().contains(<span class="string">&quot;\n&quot;</span>)) &#123;</span><br><span class="line">                            String[] paragraphs = entry.getValue().split(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">                            entry.setValue(<span class="string">&quot;&quot;</span>);</span><br><span class="line">                            createParagraphs(xwpfParagraph, paragraphs);</span><br><span class="line">                            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                xwpfRun.setText(xwpfRunText, <span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">createParagraphs</span><span class="params">(XWPFParagraph xwpfParagraph, String[] paragraphs)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(xwpfParagraph!=<span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; paragraphs.length; i++) &#123;</span><br><span class="line">                <span class="type">XmlCursor</span> <span class="variable">cursor</span> <span class="operator">=</span> xwpfParagraph.getCTP().newCursor();</span><br><span class="line">                <span class="type">XWPFParagraph</span> <span class="variable">newParagraph</span> <span class="operator">=</span> document.insertNewParagraph(cursor);</span><br><span class="line">                newParagraph.setAlignment(xwpfParagraph.getAlignment());</span><br><span class="line">                newParagraph.getCTP().insertNewR(<span class="number">0</span>).insertNewT(<span class="number">0</span>).setStringValue(paragraphs[i]);</span><br><span class="line">                newParagraph.setNumID(xwpfParagraph.getNumID());</span><br><span class="line">            &#125;</span><br><span class="line">            document.removeBodyElement(document.getPosOfParagraph(xwpfParagraph));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题背景&quot;&gt;&lt;a href=&quot;#问题背景&quot; class=&quot;headerlink&quot; title=&quot;问题背景&quot;&gt;&lt;/a&gt;问题背景&lt;/h2&gt;&lt;p&gt;在 word 中有两种换行，一种是直接按下回车的”段落换行”&lt;img src=&quot;/images/1667556405124-</summary>
+      
+    
+    
+    
+    
+    <category term="poi" scheme="https://www.furacas.com/tags/poi/"/>
+    
+    <category term="Java" scheme="https://www.furacas.com/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu20.04修改静态ip</title>
+    <link href="https://www.furacas.com/2022/avuapr/"/>
+    <id>https://www.furacas.com/2022/avuapr/</id>
+    <published>2022-10-02T05:46:24.000Z</published>
+    <updated>2022-10-02T05:59:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>给自己瞎折腾的服务器配置一个固定的静态 ip，虽然这玩意对内网穿透没啥用，但是总不能在内网中也从外网走一圈吧，在内网中直接用 ip 访问就好了。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/netplan/00-installer-config.yaml</span><br></pre></td></tr></table></figure><p>修改文件内容为</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">network:</span></span><br><span class="line">  <span class="attr">ethernets:</span></span><br><span class="line">    <span class="attr">ens160:</span></span><br><span class="line">      <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.50</span><span class="number">.8</span><span class="string">/24</span>] <span class="comment">#要修改的ip地址</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">no</span> <span class="comment">#no为静态 yes为自动获取</span></span><br><span class="line">      <span class="attr">optional:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">gateway4:</span> <span class="number">192.168</span><span class="number">.50</span><span class="number">.4</span> <span class="comment">#网关地址</span></span><br><span class="line">      <span class="attr">nameservers:</span></span><br><span class="line">        <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.50</span><span class="number">.4</span>] <span class="comment">#dns服务器，多个之间逗号分隔</span></span><br><span class="line">  <span class="attr">version:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure><p>静态 ip 下一定要配置 dns 服务器，否则无法访问外网</p><p>使设置生效</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">sudo</span> <span class="string">netplan</span> <span class="string">apply</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;给自己瞎折腾的服务器配置一个固定的静态 ip，虽然这玩意对内网穿透没啥用，但是总不能在内网中也从外网走一圈吧，在内网中直接用 ip 访问就好了。&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;</summary>
+      
+    
+    
+    
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+    <category term="ubuntu" scheme="https://www.furacas.com/tags/ubuntu/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx反向代理https忽略证书错误</title>
+    <link href="https://www.furacas.com/2022/no7oni/"/>
+    <id>https://www.furacas.com/2022/no7oni/</id>
+    <published>2022-10-01T14:32:24.000Z</published>
+    <updated>2022-10-01T14:36:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为有需求吧 esxi 暴露到公网上，内网穿透之后，然后反向代理到对应的域名上。这个时候一直 502 错误。因为 esxi 那边暴露的是 443 端口，而证书刚好无效。</p><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">server_name</span> esxi.<span class="variable">$&#123;DOMAIN_NAME&#125;</span>;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="section">location</span><span class="regexp"> ^~</span> / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span>  https://host.docker.internal:7002;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$proxy_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>  X-Real-IP  <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>  X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-NginX-Proxy <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ \.php$</span> &#123;</span><br><span class="line">    <span class="attribute">deny</span> all;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>关键部分</p><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;因为有需求吧 esxi 暴露到公网上，内网穿透之后，然后反向代理到对应的域名上。这个时候一直 502 错误。因为 esxi 那边暴露的是 443 端口，而证书刚好无效。&lt;/p&gt;
+&lt;figure class=&quot;highlight nginx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td c</summary>
+      
+    
+    
+    
+    
+    <category term="nginx" scheme="https://www.furacas.com/tags/nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu安装frp</title>
+    <link href="https://www.furacas.com/2022/ib4gf3/"/>
+    <id>https://www.furacas.com/2022/ib4gf3/</id>
+    <published>2022-09-30T03:40:35.000Z</published>
+    <updated>2022-10-02T06:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="下载-frp"><a href="#下载-frp" class="headerlink" title="下载 frp"></a>下载 frp</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/fatedier/frp/releases/download/v0.44.0/frp_0.44.0_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -vxzf frp_0.44.0_linux_amd64.tar.gz</span><br><span class="line"><span class="built_in">mv</span> frp_0.44.0_linux_amd64 frp</span><br></pre></td></tr></table></figure><h2 id="设置开启启动"><a href="#设置开启启动" class="headerlink" title="设置开启启动"></a>设置开启启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建并编辑 service文件</span></span><br><span class="line">vim /lib/systemd/system/frps.service</span><br></pre></td></tr></table></figure><p>文件内容</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=frps daemon</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里换成你的frp目录</span></span><br><span class="line">ExecStart=/root/app/frp/frps -c /root/app/frp/frps.ini</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure><p>这里是我主要用作服务端，因此我只设置了服务端的开机自启动，可以根据需求自行设置</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动frp</span></span><br><span class="line">systemctl start frps</span><br><span class="line"><span class="comment"># 设置frp自启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> frps</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;下载-frp&quot;&gt;&lt;a href=&quot;#下载-frp&quot; class=&quot;headerlink&quot; title=&quot;下载 frp&quot;&gt;&lt;/a&gt;下载 frp&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt</summary>
+      
+    
+    
+    
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+    <category term="ubuntu" scheme="https://www.furacas.com/tags/ubuntu/"/>
+    
+    <category term="内网穿透" scheme="https://www.furacas.com/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>N5105安装ESXi</title>
+    <link href="https://www.furacas.com/2022/sgemn2/"/>
+    <id>https://www.furacas.com/2022/sgemn2/</id>
+    <published>2022-09-28T03:59:43.000Z</published>
+    <updated>2022-12-03T06:58:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="软件准备"><a href="#软件准备" class="headerlink" title="软件准备"></a>软件准备</h2><p><a href="https://www.ventoy.net/cn/">Ventoy </a><br>PE 工具，这里我使用的是<a href="https://www.wepe.com.cn/download.html">微 PE</a><br>带网卡驱动的 ESXI iso 文件</p><p>我打包了需要的软件，懒得找的可以直接用我的。<br>链接：<a href="https://pan.baidu.com/s/1hHHfWzF_yR6zN8UhbG9S2g?pwd=p2bd">https://pan.baidu.com/s/1hHHfWzF_yR6zN8UhbG9S2g?pwd&#x3D;p2bd</a><br>提取码：p2bd</p><h2 id="刻录-U-盘"><a href="#刻录-U-盘" class="headerlink" title="刻录 U 盘"></a>刻录 U 盘</h2><ol><li>把 Ventory 安装到 U 盘中</li></ol><p><img src="/images/1664367921005-710672fe-4df3-41ec-acb6-04b7be723791.png"><br><img src="/images/1664368346556-6c4ec54d-a655-4586-aec7-aec1a4de9694.png"></p><ol start="2"><li>使用微 PE 制作 iso 镜像</li></ol><p><img src="/images/1664537354599-da0c8f29-d3e3-4aec-ba66-dc945703cffe.png"></p><ol start="3"><li>将制作好的的 PE 以及 ESXI 的 iso 文件复制到 U 盘中</li></ol><h2 id="系统安装"><a href="#系统安装" class="headerlink" title="系统安装"></a>系统安装</h2><ol><li>进入 bios 关闭安全 boot。</li><li>如果要安装的系统盘需要格式化，那么开机的时候按 F7，选择微 PE 系统进去格式化一下。如果不需要则跳过这一步。</li><li>开机的时候按 F7，选择 ESXi 的系统进入，跟着步骤走即可。</li><li>配置 ESXi 的网络，这里我使用的是 192.168.50.X 网段，可以根据自己的需求调整。</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;软件准备&quot;&gt;&lt;a href=&quot;#软件准备&quot; class=&quot;headerlink&quot; title=&quot;软件准备&quot;&gt;&lt;/a&gt;软件准备&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://www.ventoy.net/cn/&quot;&gt;Ventoy &lt;/a&gt;&lt;br&gt;PE 工具，这里我使</summary>
+      
+    
+    
+    
+    
+    <category term="瞎折腾" scheme="https://www.furacas.com/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+    <category term="软路由" scheme="https://www.furacas.com/tags/%E8%BD%AF%E8%B7%AF%E7%94%B1/"/>
+    
+    <category term="N5105" scheme="https://www.furacas.com/tags/N5105/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MyBatis缓存机制</title>
+    <link href="https://www.furacas.com/2022/ygenbp/"/>
+    <id>https://www.furacas.com/2022/ygenbp/</id>
+    <published>2022-09-21T05:43:57.000Z</published>
+    <updated>2022-11-24T21:13:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>正如大多数持久层框架一样，MyBatis 同样提供了一级缓存和二级缓存的支持。</p><p>MyBatis 的缓存分为一级缓存和二级缓存，两种缓存的缓存粒度是一样的，都是对应一条 sql 查询语句，但是二者的生命周期是不一样的，一级缓存的生命周期是 SqlSession 对象的使用期间，随着 SqlSession 对象的死亡而消失；二级缓存如果没有更新数据的话，最长可以和应用的生命周期一样长。</p><p>首先查询二级缓存，然后再查询一级缓存。</p><h2 id="一级缓存"><a href="#一级缓存" class="headerlink" title="一级缓存"></a>一级缓存</h2><p>一级缓存也叫本地缓存，在 MyBatis 中，一级缓存是在会话(SqlSession)层面实现的，这就说明一级缓存作用范围只能在同一个 SqlSession 中，跨 SqlSession 是无效的。当 Session flush 或 close 之后，该 Session 中的所有 Cache 就将清空。<br>MyBatis 中一级缓存是默认开启的，不需要任何配置。</p><blockquote><p>这里我加一点我的个人理解（纯个人理解有争议我们可以讨论）MyBatis 的一级缓存存在的基础条件或者说理论依据是 MySql 的默认的事物隔离级别是可重复读，在同一个事务里面不管怎么读结果都是一样的，因此可以缓存。如果不是可重复读的话，而是和别的数据库一样是读已提交，那么这个缓存可能就会出问题。当然你也可以换种角度理解我这个观点，也就是数据库的隔离界别如果不是可重复读，那么使用 MyBatis 的一级缓存就会变成可重复的的效果，会出现问题。</p></blockquote><h2 id="二级缓存"><a href="#二级缓存" class="headerlink" title="二级缓存"></a>二级缓存</h2><p>二级缓存需要手动开启。</p><p>开启二级缓存以后，会被多个 SqlSession 共享，所以它是一个全局缓存。因此它的查询流程是先查二级缓存，再查一级缓存，最后再查数据库。</p><p>二级缓存相对于一级缓存来说，实现了 SqlSession 之间缓存数据的共享，同时缓存粒度也能够到 namespace 级别，并且还可以通过 Cache 接口实现类不同的组合，对 Cache 的可控性也更强。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;正如大多数持久层框架一样，MyBatis 同样提供了一级缓存和二级缓存的支持。&lt;/p&gt;
+&lt;p&gt;MyBatis 的缓存分为一级缓存和二级缓存，两种缓存的缓存粒度是一样的，都是对应一条 sql 查询语句，但是二者的生命周期是不一样的，一级缓存的生命周期是 SqlSession </summary>
+      
+    
+    
+    
+    
+    <category term="Java" scheme="https://www.furacas.com/tags/Java/"/>
+    
+    <category term="MyBatis" scheme="https://www.furacas.com/tags/MyBatis/"/>
+    
+  </entry>
+  
+</feed>
